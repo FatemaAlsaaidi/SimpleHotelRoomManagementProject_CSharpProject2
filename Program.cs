@@ -351,17 +351,21 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
         //6. Highest-Paying Guest 
         static void HighestPayingGuest()
         {
+            // Initialize variable to store the highest total cost found
             double HghitPayingGuest = 0;
+            // Variable to keep track of the index of the highest paying guest
             int index = 0;
+            // Loop through all rooms to find the guest with the highest total cost
             for (int i=0; i< RoomCounter; i++)
             {
+                // Check if the current guest's total cost is higher than the highest found so far
                 if (TotalCost[i] > HghitPayingGuest)
                 {
-                    HghitPayingGuest = TotalCost[i];
-                    index = i;
+                    HghitPayingGuest = TotalCost[i]; // Update the highest total cost
+                    index = i; // Save the index of this guest
                 }
             }
-
+            // Display information about the highest paying guest
             Console.WriteLine("The Highest Paying Guest is:");
             Console.WriteLine($"Guest Name: {guestNames[index]}");
             Console.WriteLine($"Room Number: {roomNumbers[index]}");
@@ -375,28 +379,32 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
         //7. Cancel Reservation by Room Number
         static void CancelReservationByRoomNumber()
         {
+            // Ask the user to enter the room number they want to cancel
             Console.Write("Enter the room number to cancel reservation: ");
+            // Read the input from the user
             string input = Console.ReadLine();
+            // Declare a variable to store the validated room number
             int cancelNum;
 
+            // Try to convert the input into a valid integer
             if (!int.TryParse(input, out cancelNum))
             {
                 Console.WriteLine("Invalid room number format.");
                 return;
             }
-
+            // Initialize a variable to track the index of the room in the array
             int index = -1;
 
-            // Search for the room
+            // Search for the entered room number in the list of added rooms
             for (int i = 0; i < RoomCounter; i++)
             {
                 if (roomNumbers[i] == cancelNum)
                 {
-                    index = i;
-                    break;
+                    index = i; // Room found, store its index
+                    break; // Exit the loop early
                 }
             }
-
+            // Check if the room is currently reserved
             if (index == -1)
             {
                 Console.WriteLine("Room number not found.");
@@ -417,14 +425,16 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
 
             if (char.ToLower(confirm) == 'y')
             {
+                // Reset the reservation data for this room
                 isReserved[index] = false;
                 guestNames[index] = "";
                 nights[index] = 0;
-
+                // Notify the user of successful cancellation
                 Console.WriteLine($"Reservation for room {cancelNum} has been successfully cancelled.");
             }
             else
             {
+                // If the user chooses not to cancel, show cancellation aborted
                 Console.WriteLine("Cancellation aborted.");
             }
         }
