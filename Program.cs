@@ -291,10 +291,29 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
             Console.WriteLine($"Room {roomNumber} reserved for {guestName} for {numberOfNights} nights.");
         }
 
-        //4. View All Reservations 
+        //4. View All Reservations with total cost
         static void ViewAllReservations()
         {
-            
+            bool hasReserveRoom = false;
+            Console.WriteLine("View All Reserviation: ");
+            for (int i = 0; i < RoomCounter; i++)
+            {
+                if (isReserved[i] == true)
+                {
+                    hasReserveRoom = true;
+                    Console.WriteLine($"Room {i + 1}:");
+                    Console.WriteLine($"Room Number: {roomNumbers[i]}");
+                    Console.WriteLine($"Daily Rate: {DailyRates[i]}");
+                    Console.WriteLine($"Number of Nights: {nights[i]}");
+                    Console.WriteLine($"Total Cost: {nights[i] * DailyRates[i] }");
+                    Console.WriteLine("-------------------------");
+                }
+            }
+
+            if (!hasReserveRoom)
+            {
+                Console.WriteLine("There is no room reseve");
+            }
         }
         //5. Search Reservation by Guest Name
         static void SearchReservationByGuestName()
