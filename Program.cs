@@ -14,6 +14,7 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
         static string[] guestNames = new string[MAX_ROOMS]; //Guest names(aligned with room numbers)
         static int[] nights = new int[MAX_ROOMS]; //Nights booked per reservation 
         static DateTime[] bookingDates = new DateTime[MAX_ROOMS]; //Set using DateTime.Now
+        static double[] TotalCost= new double[MAX_ROOMS] ;
         static int RoomCounter = 0;
         static char ChoiceChar = 'y';
         static int roomNum;
@@ -287,8 +288,10 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
             isReserved[roomIndex] = true;
             guestNames[roomIndex] = guestName;
             nights[roomIndex] = numberOfNights;
+            TotalCost[roomIndex] = nights[roomIndex] * DailyRates[roomIndex];
 
-            Console.WriteLine($"Room {roomNumber} reserved for {guestName} for {numberOfNights} nights.");
+
+            Console.WriteLine($"Room {roomNumber} reserved for {guestName} for {numberOfNights} nights. And the total cost is {TotalCost}");
         }
 
         //4. View All Reservations with total cost
@@ -318,11 +321,49 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
         //5. Search Reservation by Guest Name
         static void SearchReservationByGuestName()
         {
+            bool FoundGuestName = false;
+            Console.WriteLine("Enter the guest name: ");
+            string UserGuestName = Console.ReadLine() ;
+
+            for (int i=0; i<RoomCounter; i++)
+            {
+                if (guestNames[i] == UserGuestName)
+                {
+                    FoundGuestName = true;
+                    Console.WriteLine($"Room {i + 1}:");
+                    Console.WriteLine($"Room Number: {roomNumbers[i]}");
+                    Console.WriteLine($"Daily Rate: {DailyRates[i]}");
+                    Console.WriteLine($"Number of Nights: {nights[i]}");
+                    Console.WriteLine($"Total Cost: {nights[i] * DailyRates[i]}");
+                    Console.WriteLine("-------------------------");
+
+                }
+            }
+
+            if (!FoundGuestName)
+            {
+                Console.WriteLine("The Guest Name do not found");
+            }
         }
         //6. Highest-Paying Guest 
         static void HighestPayingGuest()
         {
-
+            int HghitPayingGuest = 0;
+            for (int i=0; i< RoomCounter; i++)
+            {
+                if (TotalCost[i] > HghitPayingGuest)
+                {
+                    TotalCost[i] = HghitPayingGuest;
+                    Console.WriteLine($"The Highest Paying Guest is {HghitPayingGuest}");
+                    Console.WriteLine($"Room {i + 1}:");
+                    Console.WriteLine($"Room Number: {guestNames[i]}");
+                    Console.WriteLine($"Room Number: {roomNumbers[i]}");
+                    Console.WriteLine($"Daily Rate: {DailyRates[i]}");
+                    Console.WriteLine($"Number of Nights: {nights[i]}");
+                    Console.WriteLine($"Total Cost: {nights[i] * DailyRates[i]}");
+                    Console.WriteLine("-------------------------");
+                }
+            }
         }
         //7. Cancel Reservation by Room Number
         static void CancelReservationByRoomNumber()
