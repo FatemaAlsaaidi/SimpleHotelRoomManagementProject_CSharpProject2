@@ -1,4 +1,5 @@
-﻿using System.Net.NetworkInformation;
+﻿using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Runtime.ConstrainedExecution;
 using System.Xml.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -232,8 +233,10 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
                 {
                     hasReserveRoom = true;
                     Console.WriteLine($"Room {i + 1}:");
-                    Console.WriteLine($"Name: {roomNumbers[i]}");
+                    Console.WriteLine($"Room Number: {roomNumbers[i]}");
                     Console.WriteLine($"Mark: {DailyRates[i]}");
+                    Console.WriteLine($"Guest Name: {guestNames[i]}");
+                    Console.WriteLine($"Total Cost: {TotalCost[i]}");
                     Console.WriteLine("-------------------------");
                 }
             }
@@ -348,28 +351,85 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
         //6. Highest-Paying Guest 
         static void HighestPayingGuest()
         {
-            int HghitPayingGuest = 0;
+            double HghitPayingGuest = 0;
+            int index = 0;
             for (int i=0; i< RoomCounter; i++)
             {
                 if (TotalCost[i] > HghitPayingGuest)
                 {
-                    TotalCost[i] = HghitPayingGuest;
-                    Console.WriteLine($"The Highest Paying Guest is {HghitPayingGuest}");
-                    Console.WriteLine($"Room {i + 1}:");
-                    Console.WriteLine($"Room Number: {guestNames[i]}");
-                    Console.WriteLine($"Room Number: {roomNumbers[i]}");
-                    Console.WriteLine($"Daily Rate: {DailyRates[i]}");
-                    Console.WriteLine($"Number of Nights: {nights[i]}");
-                    Console.WriteLine($"Total Cost: {nights[i] * DailyRates[i]}");
-                    Console.WriteLine("-------------------------");
+                    HghitPayingGuest = TotalCost[i];
+                    index = i;
                 }
             }
+
+            Console.WriteLine("The Highest Paying Guest is:");
+            Console.WriteLine($"Guest Name: {guestNames[index]}");
+            Console.WriteLine($"Room Number: {roomNumbers[index]}");
+            Console.WriteLine($"Daily Rate: {DailyRates[index]}");
+            Console.WriteLine($"Number of Nights: {nights[index]}");
+            Console.WriteLine($"Total Cost: {TotalCost[index]}");
+            Console.WriteLine("-------------------------");
+
+
         }
         //7. Cancel Reservation by Room Number
         static void CancelReservationByRoomNumber()
         {
+            Console.Write("Enter the room number to cancel reservation: ");
+            string input = Console.ReadLine();
+            int cancelNum;
 
+            if (!int.TryParse(input, out cancelNum))
+            {
+                Console.WriteLine("Invalid room number format.");
+                return;
+            }
+
+            int index = -1;
+
+            // Search for the room
+            for (int i = 0; i < RoomCounter; i++)
+            {
+                if (roomNumbers[i] == cancelNum)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index == -1)
+            {
+                Console.WriteLine("Room number not found.");
+                return;
+            }
+
+            // Check if the room is reserved
+            if (!isReserved[index])
+            {
+                Console.WriteLine("This room is not currently reserved.");
+                return;
+            }
+
+            // Confirm cancellation
+            Console.Write($"Are you sure you want to cancel the reservation for room {cancelNum}? (y/n): ");
+            char confirm = Console.ReadKey().KeyChar;
+            Console.WriteLine();
+
+            if (char.ToLower(confirm) == 'y')
+            {
+                isReserved[index] = false;
+                guestNames[index] = "";
+                nights[index] = 0;
+
+                Console.WriteLine($"Reservation for room {cancelNum} has been successfully cancelled.");
+            }
+            else
+            {
+                Console.WriteLine("Cancellation aborted.");
+            }
         }
+
+
 
     }
 }
