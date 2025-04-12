@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using System.Reflection.Metadata;
 using System.Runtime.ConstrainedExecution;
 using System.Xml.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -8,6 +9,7 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
 {
     internal class Program
     {
+
         static int MAX_ROOMS = 4; // the number of rooms vailable
         static int[] roomNumbers = new int[MAX_ROOMS]; //Room Numbers 
         static double[] DailyRates = new double[MAX_ROOMS]; //Daily Rate for each room 
@@ -78,11 +80,11 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
         //1. Add a New Room 
         static void AddNewRoom()
         {
+            //declare nedded variables
             char ChoiceChar = 'y';
             bool AddMore = true;
             bool isUnique = false;
-            //int roomNum = 0;
-            //double dailyRate = 0;
+            // use while to repate code until fail the condition
             while (AddMore && RoomCounter < MAX_ROOMS)
             {
                 Tries = 0;
@@ -108,7 +110,7 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
                             break;
                         }
                     }
-
+                    // check if input data is exist or no.
                     if (exists)
                     {
                         Console.WriteLine("This room number already exists. Please enter a unique number.");
@@ -121,7 +123,7 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
                         break;
                     }
                 }
-
+                // check if the number room is unique or no 
                 if (!isUnique)
                 {
                     Console.WriteLine("Failed to provide a unique room number after 3 tries.");
@@ -134,14 +136,14 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
                 {
                     Console.WriteLine($"Enter the daily rate of room {RoomCounter + 1}: ");
                     string input = Console.ReadLine();
-
+                    // validate a numeric value of rating input data 
                     if (!double.TryParse(input, out dailyRate))
                     {
                         Console.WriteLine("Invalid input. Please enter a numeric value.");
                         Tries++;
                         //continue;
                     }
-
+                    // check if daily rate is greater than 100 or no 
                     if (dailyRate <= 100)
                     {
                         Console.WriteLine("Daily rate must be at least 100.");
@@ -164,7 +166,7 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
 
 
 
-
+                // use if statement to save inputs data if they are value and able to save.
                 if (IsSave == false)
                 {
                     Console.WriteLine("Room information did not save");
@@ -173,6 +175,7 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
                 }
                 else
                 {
+                    // if all inputs data is valiable save them in the array 
                     roomNumbers[RoomCounter] = roomNum;
                     DailyRates[RoomCounter] = dailyRate;
                     Console.WriteLine("Room information Add Successfully");
@@ -183,6 +186,7 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
                     Console.WriteLine();
                     RoomCounter++;
                 }
+                // if statement to check Maximum limit reach
                 if (RoomCounter >= MAX_ROOMS)
                 {
                     Console.WriteLine("Cannot add more room. Maximum limit reached.");
@@ -195,43 +199,58 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
                     AddMore = false;
 
                 }
+                else
+                {
+                    AddMore = true;
+                }
             }
         }
         //2. View All Rooms (Available + Reserved)
         static void ViewAllRooms()
         {
+            // Check if there are no rooms in the system
             if (RoomCounter == 0)
             {
+                // Display a message indicating that there are no rooms available.
                 Console.WriteLine("No room available.");
-                return;
+                // Exit the method if there are no rooms.
+                return; 
             }
+            // Initialize a boolean variable to track if there are any available rooms.
             bool hasAvailableRooms = false;
             Console.WriteLine("The Available Rooms Are:");
-
+            // Iterate through all the rooms in the system.
             for (int i = 0; i < RoomCounter; i++)
             {
+                // Check if the current room is not reserved.
                 if (!isReserved[i])
                 {
+                    // Set the flag to true, indicating that at least one available room is found.
                     hasAvailableRooms = true;
+                    // Display the details of the available room.
                     Console.WriteLine($"Room {i + 1}:");
                     Console.WriteLine($"Room Number: {roomNumbers[i]}");
                     Console.WriteLine($"Daily Rate: {DailyRates[i]}");
                     Console.WriteLine("-------------------------");
                 }
             }
-
+            // After the loop, check if no available rooms were found.
             if (!hasAvailableRooms)
             {
                 Console.WriteLine("There are no rooms available.");
             }
-
+            // Initialize a boolean variable to track if there are any reserved rooms.
             bool hasReserveRoom = false;
             Console.WriteLine("The Reserve Room Are: ");
+            // Iterate through all the rooms in the system again.
             for (int i =0; i< RoomCounter; i++)
             {
+                // Check if the current room is reserved.
                 if (isReserved[i])
                 {
+                    // Set the flag to true, indicating that the reserved room is found.
                     hasReserveRoom = true;
+                    // Display the details of the reserved room.
                     Console.WriteLine($"Room {i + 1}:");
                     Console.WriteLine($"Room Number: {roomNumbers[i]}");
                     Console.WriteLine($"Mark: {DailyRates[i]}");
@@ -240,6 +259,7 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
                     Console.WriteLine("-------------------------");
                 }
             }
+            // After the loop, check if no reserved rooms were found.
             if (!hasReserveRoom)
             {
                 Console.WriteLine("There is no room reseve");
@@ -300,12 +320,17 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
         //4. View All Reservations with total cost
         static void ViewAllReservations()
         {
+            // Initialize a boolean variable to track if room has reserve or no, setting it to false initially
             bool hasReserveRoom = false;
             Console.WriteLine("View All Reserviation: ");
+
+            // Start a for loop that iterates through the reservations, to print room which reserve
             for (int i = 0; i < RoomCounter; i++)
             {
+                // check if the value of IsReserved room for current index is true
                 if (isReserved[i] == true)
                 {
+                    // If the the room is reserv, set the hasReserveRoom flag to true.
                     hasReserveRoom = true;
                     Console.WriteLine($"Room {i + 1}:");
                     Console.WriteLine($"Room Number: {roomNumbers[i]}");
@@ -315,7 +340,7 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
                     Console.WriteLine("-------------------------");
                 }
             }
-
+            // use if statment to check hasReserveRoom if it is still values means that There is no room reseve untill now.
             if (!hasReserveRoom)
             {
                 Console.WriteLine("There is no room reseve");
@@ -324,15 +349,29 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
         //5. Search Reservation by Guest Name
         static void SearchReservationByGuestName()
         {
+            // Initialize a boolean variable to track if a guest name is found, setting it to false initially.
             bool FoundGuestName = false;
+            //ask user to enter the name of guest
             Console.WriteLine("Enter the guest name: ");
+            // Read the guest name entered by the user from the console and store it in the UserGuestName string variable.
             string UserGuestName = Console.ReadLine() ;
 
+            // Input validation: Check if the guest name is null or empty.
+            if (string.IsNullOrEmpty(UserGuestName))
+            {
+                Console.WriteLine("Error: Guest name cannot be empty. Please enter a valid name.");
+                return; // Exit the method if the guest name is invalid.
+            }
+
+            // Start a for loop that iterates through the reservations, using the RoomCounter variable to determine the number of iterations.
             for (int i=0; i<RoomCounter; i++)
             {
+                // Check if the guest name at the current index (i) in the guestNames array is equal to the guest name entered by the user (UserGuestName).
                 if (guestNames[i] == UserGuestName)
                 {
+                    // If the guest name is found, set the FoundGuestName flag to true.
                     FoundGuestName = true;
+                    // Display the guest remaining information
                     Console.WriteLine($"Room {i + 1}:");
                     Console.WriteLine($"Room Number: {roomNumbers[i]}");
                     Console.WriteLine($"Daily Rate: {DailyRates[i]}");
@@ -342,7 +381,7 @@ namespace SimpleHotelRoomManagementProject_CSharpProject2
 
                 }
             }
-
+            // After the loop finishes, check if the FoundGuestName flag is still false, indicating that no matching guest name was found.
             if (!FoundGuestName)
             {
                 Console.WriteLine("The Guest Name do not found");
